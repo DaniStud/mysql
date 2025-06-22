@@ -1,5 +1,6 @@
-# You can change this to a newer version of MySQL available at
-# https://hub.docker.com/r/mysql/mysql-server/tags/
+# https://hub.docker.com/_/mysql/tags/
 FROM mysql:8.0
 
 COPY config/user.cnf /etc/mysql/my.cnf
+COPY healthcheck.sh /healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD ["/healthcheck.sh"]
