@@ -1,22 +1,27 @@
 services:
-    - type: pserv
-      name: security-cats-mysql  # Match your service name
-      plan: starter  # Free tier
-      env: docker
-      dockerfilePath: ./Dockerfile
-      autoDeploy: false
-      disk:
-        name: mysql-data
-        mountPath: /var/lib/mysql
-        sizeGB: 1  # Reduced to minimize cost ($0.25/month)
-      envVars:
+  - type: pserv
+    name: security-cats-mysql
+    env: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: false
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
       - fromGroup: mysql
+    healthCheck:
+      type: tcp
+      port: 3306
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
-    envVarGroups:
-    - name: mysql
-      envVars:
+envVarGroups:
+  - name: mysql
+    envVars:
       - key: MYSQL_DATABASE
-        value: securitycats  # Match Flask app
+        value: securitycats
       - key: MYSQL_USER
         value: app_user
       - key: MYSQL_PASSWORD
